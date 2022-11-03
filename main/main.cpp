@@ -143,39 +143,28 @@ public:
 
 class Karatsuba : public Multiplication
 {
-    /*
+public:
     LongInt multiply(LongInt a, LongInt b)
-    {
-        int a_size = a.size();
-        int b_size = b.size();
-
-        int m = min(a_size - 1, b_size - 1);
-        int m2 = m/2;
-        
-        if(a_size < 10 && b_size < 10)
-            return a*b;
-        LongInt a_left = a.slice(0, m2);
-        LongInt a_right = a.slice(m2, a_size);
-        
-        LongInt b_left = b.slice(0, m2);
-        LongInt b_right = b.slice(m/2, b_size);
-
-        LongInt p1 = multiply(a_left, b_left);
-        LongInt p2 = multiply(a_left + a_right, b_left + b_right);
-        LongInt p3 = multiply(a_right, b_right);
-   
-        return (p1*(pow(10, (m2 * 2)))) + ((p2-p1-p3 )*(pow(10, m2))) + p3;
-        
-    }
-    */
-    LongInt multiply(LongInt a, LongInt b) override
     {
         int an = a.size();
         int bn = b.size();
         int m = min(an-1, bn-1);
         int m2 = m/2;
-        return b;
-    };
+        if(an < 10 && bn < 10)
+            return a*b;
+        
+        LongInt a_left = a.slice(0, m2);
+        LongInt a_right = a.slice(m2, an);
+        
+        LongInt b_left = b.slice(0, m2);
+        LongInt b_right = b.slice(m2, bn);
+
+        LongInt p1 = multiply(a_left, b_left);
+        LongInt p2 = multiply(a_left + a_right, b_left + b_right);
+        LongInt p3 = multiply(a_right, b_right);
+        
+        return (p1 * LongInt(100) + (p2 - p1 - p3) * LongInt(10) + p3);
+    }
 };
 
 Multiplication* LongInt::multiplication = new Karatsuba();
